@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ChevronRight, Download } from "./icons";
 import debounce from "lodash.debounce";
 import EventDetails from "./EventDetails";
+import clsx from "clsx";
 
 const PAGE_SIZE = 10;
 
@@ -37,8 +38,8 @@ function ActivityLogSkeleton() {
 }
 
 function ActivityLog() {
+    const [isLive, setIsLive] = useState(false);
     const [search, setSearch] = useState("");
-
     const [expandedEventId, setExpandedEventId] = useState<number | null>(null);
 
     const { data, isLoading, setSize, size } = useSWRInfinite<ListEventsReturn>(
@@ -48,7 +49,10 @@ function ActivityLog() {
                 (search ? `&search=${search}` : "");
             return `/api/events?${qs}`;
         },
-        fetcher
+        fetcher,
+        {
+            refreshInterval: isLive ? 1000 : 0,
+        }
     );
 
     const isLoadingMore =
@@ -65,6 +69,8 @@ function ActivityLog() {
         setSearch(value);
         setSize(1);
     };
+
+    const handleToggleLive = () => setIsLive(!isLive);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSearchHandler = useCallback(debounce(handleSearch, 300), []);
@@ -88,7 +94,7 @@ function ActivityLog() {
                     />
 
                     <a
-                        className="flex items-center px-6 text-xs text-[#575757] border border-[#E0E0DF] rounded-r-lg border-l-0 hover:bg-gray-700 hover:text-white transition-all"
+                        className="flex items-center px-6 text-xs text-[#575757] border border-[#E0E0DF] border-l-0 hover:bg-gray-700 hover:text-white transition-all"
                         href="/api/downloads/events"
                         download
                     >
@@ -97,6 +103,11 @@ function ActivityLog() {
                         </span>
                         Export
                     </a>
+
+                    <button onClick={handleToggleLive} className="flex space-x-2 items-center px-6 text-xs text-[#575757] border border-[#E0E0DF] rounded-r-lg border-l- transition-all hover:bg-gray-200">
+                        <span className={clsx("w-3 h-3 rounded-full", isLive ? "bg-green-600" : "bg-[#8F485D]")}></span>
+                        <span>{isLive ? "Cancel" : "Live"}</span>
+                    </button>
                 </div>
 
                 <div className="grid grid-cols-3">

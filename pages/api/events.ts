@@ -14,13 +14,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 success: true,
                 message: "Events fetched successfully"
             });
+            break;
         case "POST": 
             const event = await createEvent(req.body);
             return res.status(201).json({
                 event,
                 success: true,
                 message: "Event created successfully"
-            })
+            });
+            break;
         default:
             res.setHeader("Allow", ["GET", "POST"]);
             res.status(405).end(`Method ${method} Not Allowed`);
