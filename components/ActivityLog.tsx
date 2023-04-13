@@ -66,13 +66,14 @@ function ActivityLog() {
         setSize(1);
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSearchHandler = useCallback(debounce(handleSearch, 300), []);
 
     useEffect(() => {
         return () => {
             debouncedSearchHandler.cancel();
         };
-    }, []);
+    }, [debouncedSearchHandler]);
 
     return (
         <div className="bg-white rounded-xl border border-[#F0f0f0] shadow-[0px_3px_5px_rgb(0, 0, 0, 0.2)]">
@@ -110,6 +111,7 @@ function ActivityLog() {
                                 if (isExpanded) {
                                     return (
                                         <EventDetails
+                                            key={event.id}
                                             event={event}
                                             onCollapse={() =>
                                                 setExpandedEventId(null)
