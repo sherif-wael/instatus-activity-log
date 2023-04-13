@@ -6,6 +6,9 @@ export function ChevronRight(props: React.ComponentProps<"svg">) {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
+            width="1em"
+            height="1em"
+            {...props}
         >
             <path
                 strokeLinecap="round"
