@@ -80,6 +80,11 @@ function ActivityLog() {
         setSize(1);
     };
 
+    const handleFilter = (filters: Record<string, string>) => {
+        setFilters(filters);
+        setSize(1);
+    }
+
     const handleToggleLive = () => setIsLive(!isLive);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,10 +110,7 @@ function ActivityLog() {
 
                     <FilterMenu
                         value={filters}
-                        onChange={(filters) => {
-                            setFilters(filters);
-                            setSize(1);
-                        }}
+                        onChange={handleFilter}
                     />
 
                     <a
