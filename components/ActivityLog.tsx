@@ -80,7 +80,7 @@ function ActivityLog() {
                 <div className="mb-4">
                     <input
                         type="search"
-                        className="w-full bg-transparent border min-h-[45px] rounded-lg px-3 border-[#E0E0DF] focus:outline-none focus:border-gray-400"
+                        className="w-full bg-transparent text-sm border min-h-[45px] rounded-lg px-3 border-[#E0E0DF] focus:outline-none focus:border-gray-400"
                         placeholder="Search name, email or action..."
                         defaultValue={search}
                         onChange={(e) => debouncedSearchHandler(e.target.value)}
