@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  object      String   @default("event")
+  actor_id    String
+  actor_name  String
+  actor_email String
+  action_id   Int
+  action      Action   @relation(fields: [action_id], references: [id])
+  group       String
+  target_id   String
+  target_name String
+  location    String?
+  metadata    Json?
+  created_at  DateTime @default(now())
+
+  @@index([action_id], name: "event_action_index")
+}
+
+model Action {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  object String  @default("event_action")
+  events Event[]
+}
