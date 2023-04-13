@@ -9,6 +9,7 @@ import { ChevronRight, Download } from "./icons";
 import debounce from "lodash.debounce";
 import EventDetails from "./EventDetails";
 import clsx from "clsx";
+import FilterMenu from "./FilterMenu";
 
 const PAGE_SIZE = 10;
 
@@ -40,13 +41,22 @@ function ActivityLogSkeleton() {
 function ActivityLog() {
     const [isLive, setIsLive] = useState(false);
     const [search, setSearch] = useState("");
+    const [filters, setFilters] = useState<Record<string, string>>({});
     const [expandedEventId, setExpandedEventId] = useState<number | null>(null);
 
     const { data, isLoading, setSize, size } = useSWRInfinite<ListEventsReturn>(
         (index) => {
+            const filtersString = Object.entries(filters)
+                .reduce<string[]>((acc, [key, value]) => {
+                    if (value) acc.push(`${key}=${value}`);
+                    return acc;
+                }, [])
+                .join("&");
+
             const qs =
                 `page=${index + 1}&limit=${PAGE_SIZE}` +
-                (search ? `&search=${search}` : "");
+                (search ? `&search=${search}` : "") +
+                (filtersString ? `&${filtersString}` : "");
             return `/api/events?${qs}`;
         },
         fetcher,
@@ -93,8 +103,16 @@ function ActivityLog() {
                         onChange={(e) => debouncedSearchHandler(e.target.value)}
                     />
 
+                    <FilterMenu
+                        value={filters}
+                        onChange={(filters) => {
+                            setFilters(filters);
+                            setSize(1);
+                        }}
+                    />
+
                     <a
-                        className="flex items-center px-6 text-xs text-[#575757] border border-[#E0E0DF] border-l-0 hover:bg-gray-700 hover:text-white transition-all"
+                        className="flex items-center px-6 text-xs text-[#575757] border border-[#E0E0DF] border-l-0 hover:bg-gray-700 hover:text-white transition-all uppercase"
                         href="/api/downloads/events"
                         download
                     >
@@ -104,8 +122,16 @@ function ActivityLog() {
                         Export
                     </a>
 
-                    <button onClick={handleToggleLive} className="flex space-x-2 items-center px-6 text-xs text-[#575757] border border-[#E0E0DF] rounded-r-lg border-l- transition-all hover:bg-gray-200">
-                        <span className={clsx("w-3 h-3 rounded-full", isLive ? "bg-green-600" : "bg-[#8F485D]")}></span>
+                    <button
+                        onClick={handleToggleLive}
+                        className="flex space-x-2 items-center px-6 text-xs text-[#575757] border border-[#E0E0DF] rounded-r-lg border-l-0 transition-all hover:bg-gray-200 uppercase"
+                    >
+                        <span
+                            className={clsx(
+                                "w-3 h-3 rounded-full",
+                                isLive ? "bg-green-600" : "bg-[#8F485D]"
+                            )}
+                        ></span>
                         <span>{isLive ? "Cancel" : "Live"}</span>
                     </button>
                 </div>
