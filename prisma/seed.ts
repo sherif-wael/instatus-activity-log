@@ -31,8 +31,8 @@ async function main() {
                 action_id: actionsIds[Math.floor(Math.random() * actionsIds.length)],
                 actor_name: faker.name.fullName(),
                 actor_email: faker.internet.email(),
-                actor_id: faker.datatype.uuid(),
-                target_id: faker.datatype.uuid(),
+                actor_id: faker.datatype.uuid().split("-")[0].toUpperCase(),
+                target_id: faker.datatype.uuid().split("-")[0].toUpperCase(),
                 target_name: faker.name.fullName(),
                 group: faker.name.jobArea(),
             };
