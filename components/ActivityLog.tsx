@@ -16,7 +16,7 @@ function ActivityLogSkeleton() {
         <>
             {Array.from({ length: PAGE_SIZE }).map((_, index) => {
                 return (
-                    <div className="grid grid-cols-3 py-4" key={index}>
+                    <div className="grid grid-cols-3 px-2 py-4" key={index}>
                         <div className="flex items-center space-x-3">
                             <AvatarSkeleton />
                             <TextSkeleton className="max-w-[132px]" />
