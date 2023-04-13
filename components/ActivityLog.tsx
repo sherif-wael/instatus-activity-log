@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import React, { useCallback, useEffect, useState } from "react";
 import { ChevronRight } from "./icons";
 import debounce from "lodash.debounce";
+import EventDetails from "./EventDetails";
 
 const PAGE_SIZE = 10;
 
@@ -37,6 +38,8 @@ function ActivityLogSkeleton() {
 
 function ActivityLog() {
     const [search, setSearch] = useState("");
+
+    const [expandedEventId, setExpandedEventId] = useState<number | null>(null);
 
     const { data, isLoading, setSize, size } = useSWRInfinite<ListEventsReturn>(
         (index) => {
@@ -102,10 +105,26 @@ function ActivityLog() {
                     return (
                         <>
                             {page.events.map((event) => {
+                                const isExpanded = event.id === expandedEventId;
+
+                                if (isExpanded) {
+                                    return (
+                                        <EventDetails
+                                            event={event}
+                                            onCollapse={() =>
+                                                setExpandedEventId(null)
+                                            }
+                                        />
+                                    );
+                                }
+
                                 return (
                                     <div
                                         className="grid grid-cols-3 py-4 text-sm text-[#1C1C1C] rounded-xl border border-transparent hover:border-gray-100 hover:shadow-md cursor-pointer transition-all px-2 my-2"
                                         key={event.id}
+                                        onClick={() =>
+                                            setExpandedEventId(event.id)
+                                        }
                                     >
                                         <div className="flex items-center space-x-3">
                                             <Avatar
