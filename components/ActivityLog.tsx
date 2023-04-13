@@ -5,7 +5,7 @@ import { ListEventsReturn } from "@/lib/services/list-events";
 import Avatar from "./Avatar";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useState } from "react";
-import { ChevronRight } from "./icons";
+import { ChevronRight, Download } from "./icons";
 import debounce from "lodash.debounce";
 import EventDetails from "./EventDetails";
 
@@ -78,14 +78,25 @@ function ActivityLog() {
     return (
         <div className="bg-white rounded-xl border border-[#F0f0f0] shadow-[0px_3px_5px_rgb(0, 0, 0, 0.2)]">
             <div className="bg-[#f5f5f5] p-4 rounded-t-xl mb-2">
-                <div className="mb-4">
+                <div className="mb-4 flex">
                     <input
                         type="search"
-                        className="w-full bg-transparent text-sm border min-h-[45px] rounded-lg px-3 border-[#E0E0DF] focus:outline-none focus:border-gray-400"
+                        className="w-full bg-transparent text-sm border min-h-[45px] rounded-l-lg px-3 border-[#E0E0DF] focus:outline-none focus:border-gray-400"
                         placeholder="Search name, email or action..."
                         defaultValue={search}
                         onChange={(e) => debouncedSearchHandler(e.target.value)}
                     />
+
+                    <a
+                        className="flex items-center px-6 text-xs text-[#575757] border border-[#E0E0DF] rounded-r-lg border-l-0 hover:bg-gray-700 hover:text-white transition-all"
+                        href="/api/downloads/events"
+                        download
+                    >
+                        <span className="text-[16px] mr-1 -mt-0.5">
+                            <Download />
+                        </span>
+                        Export
+                    </a>
                 </div>
 
                 <div className="grid grid-cols-3">
