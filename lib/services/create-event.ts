@@ -10,7 +10,7 @@ const EventParser = z.object({
     group: z.string(),
     target_id: z.string(),
     target_name: z.string(),
-    location: z.string(),
+    location: z.string().optional(),
     metadata: record(z.string()).optional(),
 });
 
