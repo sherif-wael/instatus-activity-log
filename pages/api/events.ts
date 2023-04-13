@@ -1,11 +1,19 @@
 import withErrorHandler from "@/lib/error-handler";
 import { createEvent } from "@/lib/services/create-event";
+import { listEvents } from "@/lib/services/list-events";
 import { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
 
     switch (method) {
+        case "GET":
+            const result = await listEvents(req.query as any);
+            return res.status(200).json({
+                ...result,
+                success: true,
+                message: "Events fetched successfully"
+            });
         case "POST": 
             const event = await createEvent(req.body);
             return res.status(201).json({
@@ -14,7 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 message: "Event created successfully"
             })
         default:
-            res.setHeader("Allow", ["POST"]);
+            res.setHeader("Allow", ["GET", "POST"]);
             res.status(405).end(`Method ${method} Not Allowed`);
     }
 }
